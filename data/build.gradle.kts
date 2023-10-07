@@ -37,4 +37,5 @@ android {
 dependencies {
     other()
     retrofit()
+    test()
 }

@@ -42,4 +42,6 @@ android {
 dependencies {
     other()
     compose()
+
+    test()
 }
