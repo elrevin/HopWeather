@@ -8,9 +8,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import me.elrevin.core.other.Constants
+import me.elrevin.data.WeatherRepositoryImpl
 import me.elrevin.data.local.Dao
 import me.elrevin.data.local.DataBase
 import me.elrevin.data.remote.WeatherApi
+import me.elrevin.data.remote.WeatherRemoteSource
+import me.elrevin.domain.repository.WeatherRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -44,4 +47,18 @@ object Module {
     @Provides
     @Singleton
     fun provideWeatherApi(retrofit: Retrofit): WeatherApi =retrofit.create(WeatherApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideWeatherRemoteSource(
+        retrofit: Retrofit,
+        api: WeatherApi
+    ): WeatherRemoteSource = WeatherRemoteSource(api, retrofit)
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(
+        dao: Dao,
+        remoteSource: WeatherRemoteSource
+    ): WeatherRepository = WeatherRepositoryImpl(dao, remoteSource)
 }

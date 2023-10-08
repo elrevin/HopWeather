@@ -9,5 +9,6 @@ data class LocationEntity(
     val id: Int,
     val name: String,
     val country: String,
-    val region: String
+    val region: String,
+    val url: String
 )

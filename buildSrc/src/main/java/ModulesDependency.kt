@@ -14,5 +14,5 @@ fun DependencyHandler.dataModule() {
 }
 
 fun DependencyHandler.presentationModule() {
-    implementation(project(":presentation"))
+    //implementation(project(":presentation"))
 }

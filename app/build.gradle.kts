@@ -54,6 +54,11 @@ android {
 }
 
 dependencies {
+    coreModule()
+    domainModule()
+    dataModule()
+    presentationModule()
+
     other()
     hilt()
     lifecycle()

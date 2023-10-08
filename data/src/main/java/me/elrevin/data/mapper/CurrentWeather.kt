@@ -5,11 +5,13 @@ import me.elrevin.data.local.entity.LocationEntity
 import me.elrevin.data.remote.dto.CurrentWeatherDto
 import me.elrevin.domain.model.CurrentWeather
 import me.elrevin.domain.model.Location
+import java.util.Date
 
-fun CurrentWeatherDto.toWeather(locationId: Int) = CurrentWeatherEntity(
-    locationId = locationId,
+fun CurrentWeatherDto.toDomainModel(location: Location) = CurrentWeather(
+    location = location,
     temp = current!!.temp!!,
     lastUpdated = current!!.lastUpdated!!.dateFormat(),
+    lastUpdatedTimestamp = (System.currentTimeMillis() / 1000).toInt(),
     isDay = current!!.isDay!!,
     conditionText = current!!.condition!!.text!!,
     conditionIcon = current!!.condition!!.icon!!,
@@ -25,16 +27,18 @@ fun CurrentWeatherDto.toWeather(locationId: Int) = CurrentWeatherEntity(
     gust = current!!.gust!!
 )
 
-fun LocationEntity.toLocation() = Location(
+fun LocationEntity.toDomainModel() = Location(
     id = this.id,
     name = this.name,
     country = this.country,
     region = this.region,
+    url = this.url
 )
 
-fun me.elrevin.data.local.entity.CurrentWeather.toWeather() = CurrentWeather(
+fun me.elrevin.data.local.entity.CurrentWeather.toDomainModel() = CurrentWeather(
     lastUpdated = this.currentWeather.lastUpdated,
-    location = this.location.toLocation(),
+    lastUpdatedTimestamp = this.currentWeather.lastUpdatedTimestamp,
+    location = this.location.toDomainModel(),
     temp = this.currentWeather.temp,
     isDay = this.currentWeather.isDay,
     conditionText = this.currentWeather.conditionText,
@@ -49,4 +53,24 @@ fun me.elrevin.data.local.entity.CurrentWeather.toWeather() = CurrentWeather(
     cloud = this.currentWeather.cloud,
     feelslike = this.currentWeather.feelslike,
     gust = this.currentWeather.gust,
+)
+
+fun CurrentWeather.toDataEntity() = CurrentWeatherEntity(
+    locationId = this.location.id,
+    lastUpdated = this.lastUpdated,
+    lastUpdatedTimestamp = this.lastUpdatedTimestamp,
+    temp = this.temp,
+    isDay = this.isDay,
+    conditionText = this.conditionText,
+    conditionIcon = this.conditionIcon,
+    conditionCode = this.conditionCode,
+    wind = this.wind,
+    windDegree = this.windDegree,
+    windDir = this.windDir,
+    pressure = this.pressure,
+    precip = this.precip,
+    humidity = this.humidity,
+    cloud = this.cloud,
+    feelslike = this.feelslike,
+    gust = this.gust,
 )

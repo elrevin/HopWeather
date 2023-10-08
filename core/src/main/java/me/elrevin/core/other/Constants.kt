@@ -6,6 +6,8 @@ object Constants {
     const val apiBaseUrl = "https://api.weatherapi.com/v1/"
     const val apiKey = BuildConfig.apiKey
 
+    const val updatePeriod = 30 * 60
+
     object Errors {
         const val unknown = "unknown"
     }
