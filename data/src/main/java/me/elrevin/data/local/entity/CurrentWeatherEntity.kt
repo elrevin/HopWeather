@@ -8,7 +8,7 @@ data class CurrentWeatherEntity(
     @PrimaryKey
     val locationId: Int,
     val lastUpdated: String = "",
-    val temp: Int = 0,
+    val temp: Double = 0.0,
     val isDay: Int = 0,
     val conditionText: String = "",
     val conditionIcon: String = "",

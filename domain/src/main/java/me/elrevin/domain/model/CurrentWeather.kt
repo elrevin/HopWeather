@@ -3,7 +3,7 @@ package me.elrevin.domain.model
 data class CurrentWeather(
     val lastUpdated: String = "",
     val location: Location,
-    val temp: Int = 0,
+    val temp: Double = 0.0,
     val isDay: Int = 0,
     val conditionText: String = "",
     val conditionIcon: String = "",

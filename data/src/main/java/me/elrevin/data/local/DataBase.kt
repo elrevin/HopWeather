@@ -8,6 +8,7 @@ import me.elrevin.data.local.entity.LocationEntity
 @Database(
     entities = [
         CurrentWeatherEntity::class,
+        LocationEntity::class
     ],
     version = 1
 )

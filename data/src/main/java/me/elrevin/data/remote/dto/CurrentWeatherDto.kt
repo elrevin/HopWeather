@@ -9,7 +9,7 @@ data class CurrentWeatherDto(
 
 data class CurrentDto(
     @SerializedName("last_updated") var lastUpdated: String? = null,
-    @SerializedName("temp_c") var temp: Int? = null,
+    @SerializedName("temp_c") var temp: Double? = null,
     @SerializedName("is_day") var isDay: Int? = null,
     @SerializedName("condition") var condition: ConditionDto? = ConditionDto(),
     @SerializedName("wind_kph") var wind: Double? = null,
