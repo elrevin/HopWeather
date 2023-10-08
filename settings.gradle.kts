@@ -17,3 +17,4 @@ rootProject.name = "HopWeather"
 include(":app")
 include(":data")
 include(":core")
+include(":domain")

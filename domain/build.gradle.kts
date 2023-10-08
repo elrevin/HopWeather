@@ -1,18 +1,17 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id(Config.Plugins.hiltPlugin)
-    kotlin("kapt")
 }
 
 android {
-    namespace = Config.namespace("data")
+    namespace = Config.namespace("domain")
     compileSdk = Config.compileSdk
 
     compileSdk = Config.compileSdk
 
     defaultConfig {
         minSdk = Config.minSdk
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -33,16 +32,9 @@ android {
     kotlin {
         jvmToolchain(17)
     }
-
 }
 
 dependencies {
-    domainModule()
-    coreModule()
-
-    hilt()
     other()
-    retrofit()
-    room()
     test()
 }

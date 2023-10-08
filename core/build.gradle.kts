@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+val apiKey: String = gradleLocalProperties(rootDir).getProperty("apiKey")
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -9,6 +11,7 @@ android {
 
     defaultConfig {
         minSdk = Config.minSdk
+        buildConfigField("String", "apiKey", apiKey)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -32,6 +35,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
