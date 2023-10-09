@@ -1,6 +1,7 @@
 package me.elrevin.data
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import me.elrevin.data.local.Dao
 import me.elrevin.data.mapper.toDataEntity
@@ -15,11 +16,13 @@ class WeatherRepositoryImpl (
     private val dao: Dao,
     private val remoteSource: WeatherRemoteSource
 ): WeatherRepository {
-    override fun getCurrentWeather(): Flow<List<CurrentWeather>> = dao.getCurrentWeather()
-        .map { it.map { item -> item.toDomainModel() } }
+    override fun getCurrentWeather(location: Location): Flow<CurrentWeather?> =
+        dao.getCurrentWeather(location.id).map {
+            it?.toDomainModel()
+        }
 
-    override suspend fun saveCurrentWeather(currentWeatherList: List<CurrentWeather>) {
-        dao.upsertCurrentWeather(currentWeatherList.map { it.toDataEntity() })
+    override suspend fun saveCurrentWeather(currentWeather: CurrentWeather) {
+        dao.upsertCurrentWeather(currentWeather.toDataEntity() )
     }
 
     override suspend fun loadCurrentWeather(location: Location): Either<CurrentWeather> {

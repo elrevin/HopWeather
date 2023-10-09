@@ -10,10 +10,10 @@ import me.elrevin.data.local.entity.CurrentWeatherEntity
 
 @Dao
 interface Dao {
-    @Query("SELECT * FROM current_weather")
-    fun getCurrentWeather(): Flow<List<CurrentWeather>>
+    @Query("SELECT * FROM current_weather WHERE locationId = :locationId")
+    fun getCurrentWeather(locationId: Int): Flow<CurrentWeather?>
 
     @Transaction
     @Upsert
-    suspend fun upsertCurrentWeather(currentWeatherList: List<CurrentWeatherEntity>)
+    suspend fun upsertCurrentWeather(currentWeather: CurrentWeatherEntity)
 }

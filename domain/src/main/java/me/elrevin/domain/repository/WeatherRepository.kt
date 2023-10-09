@@ -6,7 +6,7 @@ import me.elrevin.domain.model.Either
 import me.elrevin.domain.model.Location
 
 interface WeatherRepository {
-    fun getCurrentWeather(): Flow<List<CurrentWeather>>
-    suspend fun saveCurrentWeather(currentWeatherList: List<CurrentWeather>)
+    fun getCurrentWeather(location: Location): Flow<CurrentWeather?>
+    suspend fun saveCurrentWeather(currentWeather: CurrentWeather)
     suspend fun loadCurrentWeather(location: Location): Either<CurrentWeather>
 }

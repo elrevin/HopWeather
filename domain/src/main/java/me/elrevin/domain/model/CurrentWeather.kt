@@ -1,11 +1,11 @@
 package me.elrevin.domain.model
 
 data class CurrentWeather(
+    val location: Location,
     val lastUpdated: String,
     val lastUpdatedTimestamp: Int,
-    val location: Location,
     val temp: Double,
-    val isDay: Int,
+    val isDay: Boolean,
     val conditionText: String,
     val conditionIcon: String,
     val conditionCode: Int,

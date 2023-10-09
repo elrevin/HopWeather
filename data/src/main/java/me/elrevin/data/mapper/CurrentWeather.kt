@@ -12,7 +12,7 @@ fun CurrentWeatherDto.toDomainModel(location: Location) = CurrentWeather(
     temp = current!!.temp!!,
     lastUpdated = current!!.lastUpdated!!.dateFormat(),
     lastUpdatedTimestamp = (System.currentTimeMillis() / 1000).toInt(),
-    isDay = current!!.isDay!!,
+    isDay = current!!.isDay!! == 1,
     conditionText = current!!.condition!!.text!!,
     conditionIcon = current!!.condition!!.icon!!,
     conditionCode = current!!.condition!!.code!!,
