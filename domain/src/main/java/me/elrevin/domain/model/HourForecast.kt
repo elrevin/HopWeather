@@ -3,7 +3,7 @@ package me.elrevin.domain.model
 data class HourForecast(
     var time: String,
     var temp: Double,
-    var isDay: Int,
+    var isDay: Boolean,
     val conditionText: String,
     val conditionIcon: String,
     val conditionCode: Int,

@@ -4,9 +4,9 @@ import me.elrevin.data.remote.dto.HourDto
 import me.elrevin.domain.model.HourForecast
 
 fun HourDto.toDomainModel() = HourForecast(
-    time = this.time!!,
+    time = this.time!!.extractTime(),
     temp = this.temp!!,
-    isDay = this.isDay!!,
+    isDay = this.isDay!! == 1,
     conditionText = this.condition!!.text!!,
     conditionIcon = this.condition!!.icon!!,
     conditionCode = this.condition!!.code!!,

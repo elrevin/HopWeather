@@ -1,9 +1,11 @@
 package me.elrevin.domain.model
 
 data class Forecast(
+    val id: Int = 0,
     val location: Location,
     val lastUpdatedTimestamp: Int,
     val date: String,
+    val dateIso: String,
     var maxTemp: Double,
     var minTemp: Double,
     var avgTemp: Double,
@@ -19,5 +21,6 @@ data class Forecast(
     val conditionCode: Int,
     val uv: Int,
     val hours: List<HourForecast>,
-    val astro: AstroForecast
+    val sunrise: String,
+    val sunset: String,
 )
