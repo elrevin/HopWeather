@@ -26,7 +26,7 @@ class WeatherRepositoryImpl (
     }
 
     override suspend fun loadCurrentWeather(location: Location): Either<CurrentWeather> {
-        val result = remoteSource.loadCurrentWeather(location.url)
+        val result = remoteSource.loadCurrentWeather(location.id)
         if (result.isSuccess()) {
             return Either.success(result.getValue().toDomainModel(location))
         }

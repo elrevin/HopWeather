@@ -6,9 +6,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "location")
 data class LocationEntity(
     @PrimaryKey
-    val id: Int,
+    val id: String,
     val name: String,
     val country: String,
     val region: String,
-    val url: String
 )

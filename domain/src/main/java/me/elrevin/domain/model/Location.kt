@@ -1,9 +1,8 @@
 package me.elrevin.domain.model
 
 data class Location(
-    val id: Int,
+    val id: String,
     val name: String = "",
     val country: String = "",
     val region: String = "",
-    val url: String = ""
 )

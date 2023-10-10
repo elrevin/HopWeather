@@ -1,11 +1,9 @@
 package me.elrevin.data.mapper
 
 import me.elrevin.data.local.entity.CurrentWeatherEntity
-import me.elrevin.data.local.entity.LocationEntity
 import me.elrevin.data.remote.dto.CurrentWeatherDto
 import me.elrevin.domain.model.CurrentWeather
 import me.elrevin.domain.model.Location
-import java.util.Date
 
 fun CurrentWeatherDto.toDomainModel(location: Location) = CurrentWeather(
     location = location,
@@ -27,13 +25,6 @@ fun CurrentWeatherDto.toDomainModel(location: Location) = CurrentWeather(
     gust = current!!.gust!!
 )
 
-fun LocationEntity.toDomainModel() = Location(
-    id = this.id,
-    name = this.name,
-    country = this.country,
-    region = this.region,
-    url = this.url
-)
 
 fun me.elrevin.data.local.entity.CurrentWeather.toDomainModel() = CurrentWeather(
     lastUpdated = this.currentWeather.lastUpdated,

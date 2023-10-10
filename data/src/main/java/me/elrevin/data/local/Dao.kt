@@ -7,13 +7,16 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import me.elrevin.data.local.entity.CurrentWeather
 import me.elrevin.data.local.entity.CurrentWeatherEntity
+import me.elrevin.data.local.entity.LocationEntity
 
 @Dao
 interface Dao {
     @Query("SELECT * FROM current_weather WHERE locationId = :locationId")
-    fun getCurrentWeather(locationId: Int): Flow<CurrentWeather?>
+    fun getCurrentWeather(locationId: String): Flow<CurrentWeather?>
 
-    @Transaction
     @Upsert
     suspend fun upsertCurrentWeather(currentWeather: CurrentWeatherEntity)
+
+    @Upsert
+    suspend fun upsertLocation(location: LocationEntity)
 }

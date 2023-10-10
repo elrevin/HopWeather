@@ -24,7 +24,7 @@ class GetCurrentWeatherUseCaseTest {
         runBlocking {
             // Empty data, request current weather for first location
             var iteration = 0
-            var location = Location(id = 1)
+            var location = Location(id = "loc1")
             launch {
                 useCase(location).collect{
                     if (iteration == 0) {
@@ -42,7 +42,7 @@ class GetCurrentWeatherUseCaseTest {
 
     @Test
     fun `Get current weather from db`() {
-        var location = Location(id = 3)
+        var location = Location(id = "loc3")
 
         runBlocking {
             launch {
@@ -58,7 +58,7 @@ class GetCurrentWeatherUseCaseTest {
 
     @Test
     fun `Get current weather from server with API failure`() {
-        var location = Location(id = 4)
+        var location = Location(id = "loc4")
         var iteration = 0
 
         runBlocking {
@@ -80,7 +80,7 @@ class GetCurrentWeatherUseCaseTest {
 
     @Test
     fun `In DB is not actual data`() {
-        var location = Location(id = 2)
+        var location = Location(id = "loc2")
         var iteration = 0
 
         runBlocking {
@@ -134,7 +134,7 @@ private class FakeRepository: WeatherRepository {
 
     override suspend fun loadCurrentWeather(location: Location): Either<CurrentWeather> {
         delay(2000)
-        if (location.id == 4) {
+        if (location.id == "loc4") {
             return Either.failure("apiError1006")
         }
 
@@ -145,7 +145,7 @@ private class FakeRepository: WeatherRepository {
 fun fakeCurrentWeather(location: Location) = CurrentWeather(
     location = location,
     lastUpdated = "",
-    lastUpdatedTimestamp = (System.currentTimeMillis() / 1000).toInt() - (if (location.id == 3) 0 else 30 * 60 + 2),
+    lastUpdatedTimestamp = (System.currentTimeMillis() / 1000).toInt() - (if (location.id == "loc3") 0 else 30 * 60 + 2),
     temp = (0 .. 30).random().toDouble(),
     isDay = true,
     conditionText = "",

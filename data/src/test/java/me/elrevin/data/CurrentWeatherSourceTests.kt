@@ -14,7 +14,7 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class `Current weather source tests` {
+class CurrentWeatherSourceTests {
     private lateinit var server: MockWebServer
     private lateinit var retrofit: Retrofit
     private lateinit var api: WeatherApi
