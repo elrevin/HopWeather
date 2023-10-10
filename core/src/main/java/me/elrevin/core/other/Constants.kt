@@ -10,5 +10,8 @@ object Constants {
 
     object Errors {
         const val unknown = "unknown"
+        const val network = "networkError"
+
+        fun apiError(code: String) = "apiError$code"
     }
 }
