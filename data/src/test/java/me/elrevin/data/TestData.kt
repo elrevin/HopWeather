@@ -108,6 +108,7 @@ fun searchLocationEmptyData() = """
     []
 """.trimIndent()
 
+
 fun getLocationNotFoundErrorData() = """
     {
     "error": {
