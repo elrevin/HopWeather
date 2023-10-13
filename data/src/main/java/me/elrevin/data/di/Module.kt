@@ -2,17 +2,23 @@ package me.elrevin.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import me.elrevin.core.other.Constants
+import me.elrevin.data.LocationRepositoryImpl
 import me.elrevin.data.WeatherRepositoryImpl
 import me.elrevin.data.local.Dao
 import me.elrevin.data.local.DataBase
+import me.elrevin.data.remote.LocationApi
+import me.elrevin.data.remote.LocationRemoteSource
 import me.elrevin.data.remote.WeatherApi
 import me.elrevin.data.remote.WeatherRemoteSource
+import me.elrevin.domain.repository.LocationRepository
 import me.elrevin.domain.repository.WeatherRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -61,4 +67,31 @@ object Module {
         dao: Dao,
         remoteSource: WeatherRemoteSource
     ): WeatherRepository = WeatherRepositoryImpl(dao, remoteSource)
+
+    @Provides
+    @Singleton
+    fun provideFusedLocationProvider(
+        @ApplicationContext context: Context
+    ): FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+    @Provides
+    @Singleton
+    fun provideLocationApi(
+        retrofit: Retrofit
+    ): LocationApi = retrofit.create(LocationApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideLocationRemoteSource(
+        api: LocationApi,
+        retrofit: Retrofit
+    ): LocationRemoteSource = LocationRemoteSource(api, retrofit)
+
+    @Provides
+    @Singleton
+    fun provideLocationRepository(
+        dao: Dao,
+        remoteSource: LocationRemoteSource,
+        fusedLocationProviderClient: FusedLocationProviderClient
+    ): LocationRepository = LocationRepositoryImpl(dao, remoteSource, fusedLocationProviderClient)
 }

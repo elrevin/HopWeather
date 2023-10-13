@@ -25,6 +25,7 @@ class Dependecies {
 
         const val core = "androidx.core:core-ktx:$coreVersion"
         const val appcompat = "androidx.appcompat:appcompat:1.6.1"
+        const val locationServeice = "com.google.android.gms:play-services-location:21.0.1"
     }
 
     object Hilt {

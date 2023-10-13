@@ -3,6 +3,7 @@ package me.elrevin.data.mapper
 import me.elrevin.data.remote.dto.WeatherDto
 import me.elrevin.domain.model.CurrentWeather
 import me.elrevin.domain.model.Location
+import java.util.Calendar
 
 fun WeatherDto.toCurrentWeatherDomainModel(location: Location) = CurrentWeather(
     location = location,
@@ -12,7 +13,7 @@ fun WeatherDto.toCurrentWeatherDomainModel(location: Location) = CurrentWeather(
     isDay = current!!.isDay!! == 1,
     conditionText = current!!.condition!!.text!!,
     conditionIcon = current!!.condition!!.icon!!,
-    conditionCode = current!!.condition!!.code!!,
+    conditionIllustration = getConditionIllustration(current!!.condition!!.code!!, current!!.isDay!! == 1),
     wind = current!!.wind!!,
     windDegree = current!!.windDegree!!,
     windDir = current!!.windDir!!,
@@ -23,3 +24,68 @@ fun WeatherDto.toCurrentWeatherDomainModel(location: Location) = CurrentWeather(
     feelslike = current!!.feelslike!!,
     gust = current!!.gust!!
 )
+
+private fun getConditionIllustration(code: Int, isDay: Boolean): String {
+    val season = when(Calendar.getInstance().get(Calendar.MONTH)) {
+        0, 1, 11 -> "winter"
+        2, 3, 4 -> "spring"
+        5, 6, 7 -> "summer"
+       else -> "autumn"
+    }
+
+    val timeOfDay = if (isDay) "day" else "night"
+
+    val weather = when (code) {
+        1000 -> "clear"
+        1003 -> "cloudy"
+        1006 -> "cloudy"
+        1009 -> "overcast"
+        1030 -> "fog"
+        1063 -> "overcast"
+        1066 -> "overcast"
+        1069 -> "overcast"
+        1072 -> "overcast"
+        1087 -> "lightning"
+        1114 -> "snow"
+        1117 -> "snow"
+        1135 -> "fog"
+        1147 -> "fog"
+        1150 -> "rain"
+        1153 -> "rain"
+        1168 -> "rain"
+        1171 -> "rain"
+        1180 -> "rain"
+        1183 -> "rain"
+        1186 -> "rain"
+        1189 -> "rain"
+        1192 -> "rain"
+        1195 -> "rain"
+        1198 -> "rain"
+        1201 -> "rain"
+        1204 -> "snow"
+        1207 -> "snow"
+        1210 -> "snow"
+        1213 -> "snow"
+        1216 -> "snow"
+        1219 -> "snow"
+        1222 -> "snow"
+        1225 -> "snow"
+        1237 -> "snow"
+        1240 -> "rain"
+        1243 -> "rain"
+        1246 -> "rain"
+        1249 -> "rain"
+        1252 -> "rain"
+        1255 -> "snow-rain"
+        1258 -> "snow-rain"
+        1261 -> "snow-rain"
+        1264 -> "snow-rain"
+        1273 -> "lightning"
+        1276 -> "lightning"
+        1279 -> "lightning"
+        1282 -> "lightning"
+        else -> "unknown"
+    }
+
+    return "$season-$weather-$timeOfDay"
+}

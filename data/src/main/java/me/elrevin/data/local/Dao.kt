@@ -28,7 +28,7 @@ interface Dao {
     suspend fun upsertLocation(location: LocationEntity)
 
     @Transaction
-    @Query("SELECT * FROM forecast WHERE dateIso >= :date")
+    @Query("SELECT * FROM forecast WHERE dateIso >= :date AND locationId = :locationId")
     fun getForecast(locationId: String, date: String = getIsoDate()): Flow<List<Forecast>>
 
     @Transaction
@@ -36,7 +36,7 @@ interface Dao {
         _deleteAllForecast()
 
         list.forEach { forecast ->
-            val forecastId = _insertForecast(forecast.forecast)
+            val forecastId = _insertForecast(forecast.forecast).toInt()
             forecast.hours.forEach { hour->
                 _insertHourForecast(hour.copy(forecastId = forecastId))
             }
@@ -47,7 +47,7 @@ interface Dao {
     suspend fun _deleteAllForecast()
 
     @Insert
-    suspend fun _insertForecast(forecastEntity: ForecastEntity): Int
+    suspend fun _insertForecast(forecastEntity: ForecastEntity): Long
 
     @Upsert
     suspend fun _insertHourForecast(hourForecastEntity: HourForecastEntity)

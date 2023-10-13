@@ -6,14 +6,15 @@ plugins {
 }
 
 android {
-    namespace = Config.namespace("data")
-    compileSdk = Config.compileSdk
-
+    namespace = Config.namespace("presentation")
     compileSdk = Config.compileSdk
 
     defaultConfig {
         minSdk = Config.minSdk
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -34,16 +35,26 @@ android {
         jvmToolchain(17)
     }
 
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.3"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 dependencies {
-    domainModule()
     coreModule()
+    domainModule()
 
-    hilt()
     other()
-    retrofit()
-    room()
+    hilt()
+    lifecycle()
+    compose()
     test()
-    locationService()
 }

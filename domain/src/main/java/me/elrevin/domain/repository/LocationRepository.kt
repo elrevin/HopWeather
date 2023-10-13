@@ -6,4 +6,5 @@ import me.elrevin.domain.model.Location
 interface LocationRepository {
     suspend fun searchLocation(locationName: String): Either<List<Location>>
     suspend fun saveLocation(location: Location)
+    suspend fun getCurrentLocation(): Either<Location>
 }

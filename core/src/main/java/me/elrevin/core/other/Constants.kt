@@ -11,6 +11,7 @@ object Constants {
     object Errors {
         const val unknown = "unknown"
         const val network = "networkError"
+        const val deviceCurrentLocation = "deviceCurrentLocationNotFound"
 
         fun apiError(code: String) = "apiError$code"
     }

@@ -13,7 +13,7 @@ data class CurrentWeatherEntity(
     val isDay: Boolean,
     val conditionText: String,
     val conditionIcon: String,
-    val conditionCode: Int,
+    val conditionIllustration: String,
     val wind: Double,
     val windDegree: Int,
     val windDir: String,
