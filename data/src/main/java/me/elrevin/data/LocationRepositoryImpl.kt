@@ -5,8 +5,10 @@ import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import me.elrevin.core.other.Constants
 import me.elrevin.data.local.Dao
 import me.elrevin.data.mapper.toDataEntity
@@ -21,6 +23,12 @@ class LocationRepositoryImpl(
     private val remoteSource: LocationRemoteSource,
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ): LocationRepository {
+    override fun getLocations(): Flow<List<Location>> = dao.getLocations().map { list ->
+        list.map { item ->
+            item.toDomainModel()
+        }
+    }
+
     override suspend fun searchLocation(locationName: String): Either<List<Location>> {
         val result = remoteSource.searchLocation(locationName)
         if (result.isSuccess()) {
@@ -53,7 +61,7 @@ class LocationRepositoryImpl(
             }
             awaitClose {}
         }.catch {
-            Log.e("HopWeatherTag", it.message ?: "")
+            result = null
         }.collect {
             if (it != null) {
                 val locationQuery = "${it.latitude},${it.longitude}"

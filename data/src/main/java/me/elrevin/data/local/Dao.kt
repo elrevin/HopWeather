@@ -51,4 +51,7 @@ interface Dao {
 
     @Upsert
     suspend fun _insertHourForecast(hourForecastEntity: HourForecastEntity)
+
+    @Query("SELECT * FROM location")
+    fun getLocations(): Flow<List<LocationEntity>>
 }

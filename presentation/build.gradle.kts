@@ -54,6 +54,7 @@ dependencies {
 
     other()
     hilt()
+    hiltNavigation()
     lifecycle()
     compose()
     test()
