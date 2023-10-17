@@ -6,6 +6,7 @@ import me.elrevin.data.remote.WeatherApi
 import me.elrevin.data.remote.WeatherRemoteSource
 import me.elrevin.data.remote.dto.WeatherDto
 import me.elrevin.domain.model.Either
+import me.elrevin.domain.model.Location
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -47,7 +48,7 @@ class WeatherTest {
         Assert.assertEquals("2023-10-10", data.getValue().forecast!!.forecastday[0].date)
         Assert.assertEquals(24, data.getValue().forecast!!.forecastday[0].hour.size)
 
-        val domainModel = data.getValue().toDomainModel()
+        val domainModel = data.getValue().toDomainModel(Location(""))
         Assert.assertEquals(1, domainModel.forecasts.size)
         Assert.assertEquals(24, domainModel.forecasts[0].hours.size)
         Assert.assertEquals("10.10.2023", domainModel.forecasts[0].date)

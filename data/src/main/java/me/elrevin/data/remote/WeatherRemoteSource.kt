@@ -1,6 +1,5 @@
 package me.elrevin.data.remote
 
-import android.util.Log
 import me.elrevin.core.other.Constants
 import me.elrevin.data.remote.dto.ErrorResponseDto
 import me.elrevin.data.remote.dto.WeatherDto
@@ -37,7 +36,6 @@ class WeatherRemoteSource (
                 }
             }
         } catch (e: Exception) {
-            Log.e("HW APP", e.message ?: "")
             Either.failure("networkError")
         }
 }
