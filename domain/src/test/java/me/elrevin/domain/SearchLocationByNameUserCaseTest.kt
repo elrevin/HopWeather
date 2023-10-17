@@ -1,5 +1,7 @@
 package me.elrevin.domain
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import me.elrevin.core.other.Constants
 import me.elrevin.domain.model.Either
@@ -40,6 +42,8 @@ class SearchLocationByNameUserCaseTest {
 }
 
 private class FakeLocationRepository: LocationRepository {
+    override fun getLocations(): Flow<List<Location>> = flow {  }
+
     override suspend fun searchLocation(locationName: String): Either<List<Location>> {
         if (locationName == "Berl") {
             return Either.success(
@@ -61,6 +65,10 @@ private class FakeLocationRepository: LocationRepository {
 
     override suspend fun saveLocation(location: Location) {
 
+    }
+
+    override suspend fun getCurrentLocation(): Either<Location> {
+        return Either.loading()
     }
 
 }

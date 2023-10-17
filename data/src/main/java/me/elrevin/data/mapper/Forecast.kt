@@ -1,24 +1,21 @@
 package me.elrevin.data.mapper
 
+import me.elrevin.core.other.dateFormat
+import me.elrevin.core.other.extractDate
 import me.elrevin.data.local.entity.ForecastEntity
 import me.elrevin.data.local.entity.HourForecastEntity
 import me.elrevin.data.remote.dto.ForecastDayDto
-import me.elrevin.data.remote.dto.ForecastDto
 import me.elrevin.domain.model.Forecast
 import me.elrevin.domain.model.HourForecast
 import me.elrevin.domain.model.Location
 
-fun ForecastDto.toDomainModel(location: Location): List<Forecast> =
-    this.forecast!!.forecastday.map { it.toDomainModel(location) }
-
-fun ForecastDayDto.toDomainModel(location: Location) = Forecast(
-    location = location,
+fun ForecastDayDto.toDomainModel() = Forecast(
     lastUpdatedTimestamp = (System.currentTimeMillis() / 1000).toInt(),
     date = this.date!!.dateFormat(),
     dateIso = this.date!!.extractDate(),
-    maxTemp = day!!.maxTemp!!,
-    minTemp = day!!.minTemp!!,
-    avgTemp = day!!.avgTemp!!,
+    maxTemp = day!!.maxTemp!!.toInt(),
+    minTemp = day!!.minTemp!!.toInt(),
+    avgTemp = day!!.avgTemp!!.toInt(),
     maxWind = day!!.maxWind!!,
     totalPrecip = day!!.totalPrecip!!,
     avgHumidity = day!!.avgHumidity!!,
@@ -27,7 +24,7 @@ fun ForecastDayDto.toDomainModel(location: Location) = Forecast(
     dailyWillItSnow = day!!.dailyWillItSnow!!,
     dailyChanceOfSnow = day!!.dailyChanceOfSnow!!,
     conditionText = day!!.condition!!.text!!,
-    conditionIcon = day!!.condition!!.icon!!,
+    conditionIcon = "https:" + day!!.condition!!.icon!!,
     conditionCode = day!!.condition!!.code!!,
     uv = day!!.uv!!,
     hours = this.hour.map { it.toDomainModel() },
@@ -35,10 +32,10 @@ fun ForecastDayDto.toDomainModel(location: Location) = Forecast(
     sunset = this.astro!!.sunset!!,
 )
 
-fun Forecast.toDataEntity() = me.elrevin.data.local.entity.Forecast(
+fun Forecast.toDataEntity(location: Location) = me.elrevin.data.local.entity.Forecast(
     forecast = ForecastEntity(
         id = this.id,
-        locationId = this.location.id,
+        locationId = location.id,
         lastUpdatedTimestamp = this.lastUpdatedTimestamp,
         date = this.date,
         dateIso = this.dateIso,
@@ -59,7 +56,6 @@ fun Forecast.toDataEntity() = me.elrevin.data.local.entity.Forecast(
         sunrise = this.sunrise,
         sunset = this.sunset,
     ),
-    location = this.location.toDataEntity(),
     hours = this.hours.map { it.toDataEntity(this.id) }
 )
 
@@ -110,7 +106,6 @@ fun HourForecastEntity.toDomainModel() = HourForecast(
 
 fun me.elrevin.data.local.entity.Forecast.toDomainModel() = Forecast(
     id = this.forecast.id,
-    location = this.location.toDomainModel(),
     lastUpdatedTimestamp = this.forecast.lastUpdatedTimestamp,
     date = this.forecast.date,
     dateIso = this.forecast.dateIso,

@@ -4,7 +4,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
 object  AppShapes {
-    val large = RoundedCornerShape(33.dp)
-    val medium = RoundedCornerShape(16.dp)
-    val small = RoundedCornerShape(14.dp)
+    const val largeRadius = 33
+    const val mediumRadius = 16
+    const val smallRadius = 14
+    val large = RoundedCornerShape(largeRadius.dp)
+    val medium = RoundedCornerShape(mediumRadius.dp)
+    val small = RoundedCornerShape(smallRadius.dp)
 }

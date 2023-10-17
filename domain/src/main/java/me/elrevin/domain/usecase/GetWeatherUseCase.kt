@@ -5,19 +5,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOn
-import me.elrevin.domain.model.CurrentWeather
 import me.elrevin.domain.model.Either
 import me.elrevin.domain.model.Location
+import me.elrevin.domain.model.Weather
 import me.elrevin.domain.repository.WeatherRepository
 
-class GetCurrentWeatherUseCase(
+class GetWeatherUseCase(
     private val repository: WeatherRepository,
-    private val loadCurrentWeatherUseCase: LoadCurrentWeatherUseCase = LoadCurrentWeatherUseCase(repository)
+    private val loadWeatherUseCase: LoadWeatherUseCase = LoadWeatherUseCase(repository)
 ) {
-    operator fun invoke(location: Location): Flow<Either<CurrentWeather>> =
-        repository.getCurrentWeather(location)
+    operator fun invoke(location: Location): Flow<Either<Weather>> =
+        repository.getWeather(location)
             .flatMapConcat {
-                loadCurrentWeatherUseCase(location, it)
+                loadWeatherUseCase(location, it)
             }
             .distinctUntilChangedBy {
                 when {

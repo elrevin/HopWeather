@@ -1,7 +1,6 @@
 package me.elrevin.data
 
 fun forecastTestData() = """
-    
     {
         "location": {
             "name": "London",

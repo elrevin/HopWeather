@@ -17,7 +17,7 @@ import androidx.room.ForeignKey
 )
 data class HourForecastEntity(
     val forecastId: Int,
-    var temp: Double,
+    var temp: Int,
     val time: String,
     var isDay: Boolean,
     val conditionText: String,
@@ -30,7 +30,7 @@ data class HourForecastEntity(
     var precip: Int,
     var humidity: Int,
     var cloud: Int,
-    var feelsLike: Double,
+    var feelsLike: Int,
     var willItRain: Int,
     var chanceOfRain: Int,
     var willItSnow: Int,

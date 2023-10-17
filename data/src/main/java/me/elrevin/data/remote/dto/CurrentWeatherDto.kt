@@ -2,7 +2,7 @@ package me.elrevin.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class CurrentDto(
+data class CurrentWeatherDto(
     @SerializedName("last_updated") var lastUpdated: String? = null,
     @SerializedName("last_updated_epoch") var lastUpdatedTimestamp: Int? = null,
     @SerializedName("temp_c") var temp: Double? = null,

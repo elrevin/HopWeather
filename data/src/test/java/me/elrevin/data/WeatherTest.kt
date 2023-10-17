@@ -1,6 +1,7 @@
 package me.elrevin.data
 
 import kotlinx.coroutines.runBlocking
+import me.elrevin.data.mapper.toDomainModel
 import me.elrevin.data.remote.WeatherApi
 import me.elrevin.data.remote.WeatherRemoteSource
 import me.elrevin.data.remote.dto.WeatherDto
@@ -14,7 +15,7 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class CurrentWeatherSourceTests {
+class WeatherTest {
     private lateinit var server: MockWebServer
     private lateinit var retrofit: Retrofit
     private lateinit var api: WeatherApi
@@ -33,18 +34,27 @@ class CurrentWeatherSourceTests {
     }
 
     @Test
-    fun `Successfully get current weather`() {
+    fun `Successfully get forecast`() {
         val res = MockResponse()
-        res.setBody(getSuccessfulCurrentWeatherData())
+        res.setBody(forecastTestData())
         server.enqueue(res)
-        val data: Either<WeatherDto>
-        runBlocking {
-            data = weatherRemoteSource.loadCurrentWeather("")
+        val data: Either<WeatherDto> = runBlocking {
+            weatherRemoteSource.loadWeather("")
         }
-        Assert.assertEquals(data.isSuccess(), true)
-        Assert.assertEquals(data.getValue().location?.name, "Berlin")
-        Assert.assertEquals(data.getValue().current?.temp, 15.0)
+        Assert.assertEquals(true, data.isSuccess())
+        Assert.assertEquals("London", data.getValue().location?.name)
+        Assert.assertEquals(1, data.getValue().forecast?.forecastday?.size)
+        Assert.assertEquals("2023-10-10", data.getValue().forecast!!.forecastday[0].date)
+        Assert.assertEquals(24, data.getValue().forecast!!.forecastday[0].hour.size)
+
+        val domainModel = data.getValue().toDomainModel()
+        Assert.assertEquals(1, domainModel.forecasts.size)
+        Assert.assertEquals(24, domainModel.forecasts[0].hours.size)
+        Assert.assertEquals("10.10.2023", domainModel.forecasts[0].date)
+        Assert.assertEquals("Sunny", domainModel.forecasts[0].conditionText)
+
     }
+
 
     @Test
     fun `Get location not found error`() {
@@ -53,25 +63,26 @@ class CurrentWeatherSourceTests {
         res.setResponseCode(400)
         server.enqueue(res)
         val data: Either<WeatherDto> = runBlocking {
-            weatherRemoteSource.loadCurrentWeather("")
+            weatherRemoteSource.loadWeather("")
         }
         Assert.assertEquals(data.isFailure(), true)
         Assert.assertEquals(data.getFailureMsgOrNull(), "apiError1006")
     }
 
+
     @Test
     fun `Network error`() {
         server.shutdown()
         val data: Either<WeatherDto> = runBlocking {
-            weatherRemoteSource.loadCurrentWeather("")
+            weatherRemoteSource.loadWeather("")
         }
         Assert.assertEquals(data.isFailure(), true)
         Assert.assertEquals(data.getFailureMsgOrNull(), "networkError")
     }
+
 
     @After
     fun down() {
         server.shutdown()
     }
 }
-

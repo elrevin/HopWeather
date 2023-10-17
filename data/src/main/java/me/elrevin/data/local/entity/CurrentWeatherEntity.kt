@@ -9,7 +9,7 @@ data class CurrentWeatherEntity(
     val locationId: String,
     val lastUpdated: String,
     val lastUpdatedTimestamp: Int,
-    val temp: Double,
+    val temp: Int,
     val isDay: Boolean,
     val conditionText: String,
     val conditionIcon: String,
@@ -21,6 +21,6 @@ data class CurrentWeatherEntity(
     val precip: Int,
     val humidity: Int,
     val cloud: Int,
-    val feelslike: Double,
+    val feelslike: Int,
     val gust: Double
 )

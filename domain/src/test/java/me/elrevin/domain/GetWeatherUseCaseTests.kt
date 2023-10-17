@@ -4,28 +4,29 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.elrevin.domain.model.Location
-import me.elrevin.domain.usecase.GetCurrentWeatherUseCase
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import me.elrevin.domain.usecase.GetWeatherUseCase
+import org.junit.Assert
 import org.junit.Test
 
-class GetCurrentWeatherUseCaseTest {
+class GetWeatherUseCaseTests {
     private val repository = FakeWeatherRepository()
-    private val useCase = GetCurrentWeatherUseCase(repository)
+    private val useCase = GetWeatherUseCase(repository)
 
     @Test
-    fun `Get current weather with loading first`() {
+    fun `Get weather with loading first`() {
         runBlocking {
             // Empty data, request current weather for first location
             var iteration = 0
-            var location = Location(id = "loc1")
+            var location = Location(id = "loc3")
             launch {
                 useCase(location).collect{
                     if (iteration == 0) {
-                        assertTrue(it.isLoading())
+                        Assert.assertTrue(it.isLoading())
                     } else {
-                        assertTrue(it.isSuccess())
-                        assertEquals(it.getValue().location, location)
+                        Assert.assertTrue(it.isSuccess())
+                        Assert.assertEquals(location, it.getValue().location)
+                        Assert.assertNotEquals(null, it.getValue().currentWeather)
+                        Assert.assertEquals(4, it.getValue().forecasts.size)
                         cancel()
                     }
                     iteration++
@@ -35,15 +36,16 @@ class GetCurrentWeatherUseCaseTest {
     }
 
     @Test
-    fun `Get current weather from db`() {
+    fun `Get weather from db`() {
         var location = Location(id = "loc3")
 
         runBlocking {
             launch {
                 repository.addFakeWeather(location)
                 useCase(location).collect{
-                    assertTrue(it.isSuccess())
-                    assertEquals(it.getValue().location, location)
+                    Assert.assertTrue(it.isSuccess())
+                    Assert.assertNotEquals(null, it.getValue().currentWeather)
+                    Assert.assertEquals(4, it.getValue().forecasts.size)
                     cancel()
                 }
             }
@@ -51,7 +53,7 @@ class GetCurrentWeatherUseCaseTest {
     }
 
     @Test
-    fun `Get current weather from server with API failure`() {
+    fun `Get weather from server with API failure`() {
         var location = Location(id = "loc4")
         var iteration = 0
 
@@ -59,10 +61,10 @@ class GetCurrentWeatherUseCaseTest {
             launch {
                 useCase(location).collect{
                     if (iteration == 0) {
-                        assertTrue(it.isLoading())
+                        Assert.assertTrue(it.isLoading())
                     } else {
-                        assertTrue(it.isFailure())
-                        assertEquals(it.getFailureMsgOrNull(), "apiError1006")
+                        Assert.assertTrue(it.isFailure())
+                        Assert.assertEquals("apiError1006", it.getFailureMsgOrNull())
                         cancel()
 
                     }
@@ -82,11 +84,11 @@ class GetCurrentWeatherUseCaseTest {
                 val fake = repository.addFakeWeather(location)
                 useCase(location).collect{
                     if (iteration == 0) {
-                        assertTrue(it.isLoading())
+                        Assert.assertTrue(it.isLoading())
                     } else {
-                        assertTrue(it.isSuccess())
-                        assertEquals(it.getValue().location, location)
-                        assertTrue(it.getValue().lastUpdatedTimestamp - fake.lastUpdatedTimestamp > 30 * 60 + 2)
+                        Assert.assertTrue(it.isSuccess())
+                        Assert.assertEquals(it.getValue().forecasts.size, 4)
+                        Assert.assertTrue(it.getValue().currentWeather!!.lastUpdatedTimestamp - fake.currentWeather!!.lastUpdatedTimestamp > 30 * 60 + 2)
                         cancel()
 
                     }

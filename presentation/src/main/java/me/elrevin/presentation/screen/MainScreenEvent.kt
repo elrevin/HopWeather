@@ -1,4 +1,4 @@
-package me.elrevin.presentation.screen.main
+package me.elrevin.presentation.screen
 
 sealed class MainScreenEvent {
     object LocationAccessPermissionsGranted: MainScreenEvent()

@@ -1,4 +1,4 @@
-package me.elrevin.presentation.screen.main
+package me.elrevin.presentation.screen
 
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult

@@ -1,36 +1,103 @@
+@file:JvmName("CurrentWeatherKt")
+
 package me.elrevin.data.mapper
 
+import me.elrevin.core.other.dateFormat
+import me.elrevin.data.local.entity.CurrentWeatherEntity
+import me.elrevin.data.remote.dto.CurrentWeatherDto
 import me.elrevin.data.remote.dto.WeatherDto
 import me.elrevin.domain.model.CurrentWeather
 import me.elrevin.domain.model.Location
+import me.elrevin.domain.model.Weather
 import java.util.Calendar
 
-fun WeatherDto.toCurrentWeatherDomainModel(location: Location) = CurrentWeather(
+fun WeatherDto.toDomainModel(location: Location) = Weather(
     location = location,
-    temp = current!!.temp!!,
-    lastUpdated = current!!.lastUpdated!!.dateFormat(),
-    lastUpdatedTimestamp = (System.currentTimeMillis() / 1000).toInt(),
-    isDay = current!!.isDay!! == 1,
-    conditionText = current!!.condition!!.text!!,
-    conditionIcon = current!!.condition!!.icon!!,
-    conditionIllustration = getConditionIllustration(current!!.condition!!.code!!, current!!.isDay!! == 1),
-    wind = current!!.wind!!,
-    windDegree = current!!.windDegree!!,
-    windDir = current!!.windDir!!,
-    pressure = current!!.pressure!!,
-    precip = current!!.precip!!,
-    humidity = current!!.humidity!!,
-    cloud = current!!.cloud!!,
-    feelslike = current!!.feelslike!!,
-    gust = current!!.gust!!
+    // The forecast data which returns from API contains location,
+    // but without url, which converted into id.
+    // That why we use location which came in arguments
+
+    currentWeather = this.current!!.toDomainModel(),
+    forecasts = this.forecast!!.forecastday.map { it.toDomainModel() }
 )
+
+fun me.elrevin.data.local.entity.Weather.toDomainModel() = Weather(
+    location = this.location.toDomainModel(),
+    currentWeather = this.currentWeather?.toDomainModel(),
+    forecasts = this.forecasts.map { it.toDomainModel() }
+)
+
+fun Weather.toDataEntity() = me.elrevin.data.local.entity.Weather(
+    location = this.location.toDataEntity(),
+    currentWeather = this.currentWeather?.toDataEntity(this.location),
+    forecasts = this.forecasts.map { it.toDataEntity(this.location) }
+)
+
+fun CurrentWeatherEntity.toDomainModel() = CurrentWeather(
+    lastUpdated = this.lastUpdated,
+    lastUpdatedTimestamp = this.lastUpdatedTimestamp,
+    temp = this.temp,
+    isDay = this.isDay,
+    conditionText = this.conditionText,
+    conditionIcon = this.conditionIcon,
+    conditionIllustration = this.conditionIllustration,
+    wind = this.wind,
+    windDegree = this.windDegree,
+    windDir = this.windDir,
+    pressure = this.pressure,
+    precip = this.precip,
+    humidity = this.humidity,
+    cloud = this.cloud,
+    feelslike = this.feelslike,
+    gust = this.gust,
+)
+
+fun CurrentWeather.toDataEntity(location: Location) = CurrentWeatherEntity(
+    locationId = location.id,
+    lastUpdated = this.lastUpdated,
+    lastUpdatedTimestamp = this.lastUpdatedTimestamp,
+    temp = this.temp,
+    isDay = this.isDay,
+    conditionText = this.conditionText,
+    conditionIcon = this.conditionIcon,
+    conditionIllustration = this.conditionIllustration,
+    wind = this.wind,
+    windDegree = this.windDegree,
+    windDir = this.windDir,
+    pressure = this.pressure,
+    precip = this.precip,
+    humidity = this.humidity,
+    cloud = this.cloud,
+    feelslike = this.feelslike,
+    gust = this.gust,
+)
+
+fun CurrentWeatherDto.toDomainModel() = CurrentWeather(
+    temp = temp!!.toInt(),
+    lastUpdated = lastUpdated!!.dateFormat(),
+    lastUpdatedTimestamp = (System.currentTimeMillis() / 1000).toInt(),
+    isDay = isDay!! == 1,
+    conditionText = condition!!.text!!,
+    conditionIcon = "https:" + condition!!.icon!!.replace("64x64", "128x128"),
+    conditionIllustration = getConditionIllustration(condition!!.code!!, isDay!! == 1),
+    wind = wind!!,
+    windDegree = windDegree!!,
+    windDir = windDir!!,
+    pressure = pressure!!,
+    precip = precip!!,
+    humidity = humidity!!,
+    cloud = cloud!!,
+    feelslike = feelslike!!.toInt(),
+    gust = gust!!
+)
+
 
 private fun getConditionIllustration(code: Int, isDay: Boolean): String {
     val season = when(Calendar.getInstance().get(Calendar.MONTH)) {
         0, 1, 11 -> "winter"
         2, 3, 4 -> "spring"
         5, 6, 7 -> "summer"
-       else -> "autumn"
+        else -> "autumn"
     }
 
     val timeOfDay = if (isDay) "day" else "night"

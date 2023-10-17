@@ -1,5 +1,6 @@
 package me.elrevin.presentation.base_ui.theme
 
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -14,18 +15,22 @@ val appFamily = FontFamily(
 )
 
 object AppTypography {
-    val head = TextStyle(
+    val Head = TextStyle(
         fontFamily = appFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 112.sp,
-        lineHeight = 112.sp
+        fontSize = 112.sp
+    )
+
+    val TinyHead = TextStyle(
+        fontFamily = appFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 57.sp
     )
 
     val H1 = TextStyle(
         fontFamily = appFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
-        lineHeight = 28.sp
+        fontSize = 22.sp
     )
 
     val H2 = TextStyle(
@@ -49,6 +54,13 @@ object AppTypography {
         lineHeight = 24.sp
     )
 
+    val Button = TextStyle(
+        fontFamily = appFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        lineHeight = 24.sp
+    )
+
     val Body = TextStyle(
         fontFamily = appFamily,
         fontWeight = FontWeight.Normal,
@@ -58,7 +70,7 @@ object AppTypography {
 
     val Title = TextStyle(
         fontFamily = appFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 18.sp
     )
@@ -70,10 +82,17 @@ object AppTypography {
         lineHeight = 20.sp
     )
 
-    val Label = TextStyle(
+    val LargeLabel = TextStyle(
         fontFamily = appFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 11.sp,
+        fontSize = 13.sp,
         lineHeight = 14.sp
+    )
+
+    val SmallLabel = TextStyle(
+        fontFamily = appFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp,
+        lineHeight = 11.sp
     )
 }

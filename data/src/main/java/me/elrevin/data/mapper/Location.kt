@@ -5,7 +5,7 @@ import me.elrevin.data.remote.dto.LocationDto
 import me.elrevin.domain.model.Location
 
 fun LocationDto.toDomainModel() = Location(
-    id = this.url!!,
+    id = this.url ?: "",
     name = this.name!!,
     country = this.country!!,
     region = this.region!!

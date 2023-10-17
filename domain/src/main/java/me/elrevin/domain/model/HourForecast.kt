@@ -1,8 +1,11 @@
 package me.elrevin.domain.model
 
+import javax.annotation.concurrent.Immutable
+
+@Immutable
 data class HourForecast(
     var time: String,
-    var temp: Double,
+    var temp: Int,
     var isDay: Boolean,
     val conditionText: String,
     val conditionIcon: String,
@@ -14,11 +17,10 @@ data class HourForecast(
     var precip: Int,
     var humidity: Int,
     var cloud: Int,
-    var feelsLike: Double,
+    var feelsLike: Int,
     var willItRain: Int,
     var chanceOfRain: Int,
     var willItSnow: Int,
     var chanceOfSnow: Int,
     var uv: Int,
-
 )

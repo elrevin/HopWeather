@@ -8,16 +8,9 @@ data class Forecast(
     val forecast: ForecastEntity,
 
     @Relation(
-        entity = LocationEntity::class,
-        parentColumn = "locationId",
-        entityColumn = "id"
-    )
-    val location: LocationEntity,
-
-    @Relation(
         entity = HourForecastEntity::class,
         parentColumn = "id",
         entityColumn = "forecastId"
     )
-    val hours: List<HourForecastEntity>,
+    val hours: List<HourForecastEntity> = listOf(),
 )

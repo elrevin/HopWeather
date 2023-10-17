@@ -17,7 +17,11 @@ data class AppColorScheme(
 
     // Other
     val screenBackground: Color,
+    val topBarBackground: Color,
+    val expandedTopBarText: Color,
+    val collapsedTopBarText: Color,
     val panelBackground: Color,
+    val panelText: Color,
     val chanceBarBackground: Color,
     val chanceBarForeground: Color,
     val iconsBackground: Color,
@@ -34,7 +38,11 @@ val localAppColors = staticCompositionLocalOf {
         textFieldPlaceholder = Color.Unspecified,
         textFieldValue = Color.Unspecified,
         screenBackground = Color.Unspecified,
+        topBarBackground = Color.Unspecified,
+        expandedTopBarText = Color.Unspecified,
+        collapsedTopBarText = Color.Unspecified,
         panelBackground = Color.Unspecified,
+        panelText = Color.Unspecified,
         chanceBarBackground = Color.Unspecified,
         chanceBarForeground = Color.Unspecified,
         iconsBackground = Color.Unspecified,
