@@ -19,16 +19,22 @@ import me.elrevin.presentation.base_ui.theme.AppTheme
 import java.time.LocalDateTime
 
 @Composable
-internal fun HourlyForecast(forecast: Forecast) {
-    Box (
+internal fun HourlyForecast(
+    forecast: Forecast,
+    nextDayforecast: Forecast,
+) {
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
     ) {
         val now = LocalDateTime.now().hour
-        val hours = forecast.onlyActualHours.subList(0, 6.coerceAtMost(forecast.onlyActualHours.size))
+        var hours = forecast.onlyActualHours.toMutableList()
+        hours.addAll(nextDayforecast.hours)
+        hours = hours.subList(0, 6)
+
         LargePanel(icon = AppTheme.icons.watch(), title = "Hourly forecast") {
-            Row (
+            Row(
                 modifier = Modifier
                     .padding(12.dp)
                     .fillMaxWidth(),
@@ -52,9 +58,9 @@ private fun HourForecast(
 ) {
     val h = hour.time.extractHours()
     Box(contentAlignment = Alignment.TopCenter) {
-        Row (verticalAlignment = Alignment.Bottom) {
+        Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                text = if (h == now) "NOW" else h.toString(),
+                text = if (h == now) "NOW" else h.toString().padStart(2, '0'),
                 style = AppTheme.typography.LargeLabel,
                 color = AppTheme.colors.panelText
             )

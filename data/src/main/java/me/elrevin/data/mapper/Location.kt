@@ -16,6 +16,7 @@ fun LocationEntity.toDomainModel() = Location(
     name = this.name,
     country = this.country,
     region = this.region,
+    isTracked = true, // because this conversion can be only from DataBase Record to DomainModel
 )
 
 fun Location.toDataEntity() = LocationEntity(

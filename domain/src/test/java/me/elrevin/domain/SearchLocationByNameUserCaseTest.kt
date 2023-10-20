@@ -16,7 +16,7 @@ class SearchLocationByNameUserCaseTest {
     @Test
     fun `Successfully searching location by name`() {
         runBlocking {
-            val result = repository.searchLocation("Berl")
+            val result = repository.loadLocations("Berl")
             Assert.assertTrue(result.isSuccess())
             Assert.assertTrue(result.getValue().size == 3)
         }
@@ -25,7 +25,7 @@ class SearchLocationByNameUserCaseTest {
     @Test
     fun `Successfully searching location by name with empty result`() {
         runBlocking {
-            val result = repository.searchLocation("Neverland")
+            val result = repository.loadLocations("Neverland")
             Assert.assertTrue(result.isSuccess())
             Assert.assertTrue(result.getValue().size == 0)
         }
@@ -34,7 +34,7 @@ class SearchLocationByNameUserCaseTest {
     @Test
     fun `Error`() {
         runBlocking {
-            val result = repository.searchLocation("Other")
+            val result = repository.loadLocations("Other")
             Assert.assertTrue(result.isFailure())
             Assert.assertEquals(result.getFailureMsgOrNull(), Constants.Errors.network)
         }
@@ -43,8 +43,11 @@ class SearchLocationByNameUserCaseTest {
 
 private class FakeLocationRepository: LocationRepository {
     override fun getLocations(): Flow<List<Location>> = flow {  }
+    override suspend fun getLocationsByName(name: String): List<Location> {
+        TODO("Not yet implemented")
+    }
 
-    override suspend fun searchLocation(locationName: String): Either<List<Location>> {
+    override suspend fun loadLocations(locationName: String): Either<List<Location>> {
         if (locationName == "Berl") {
             return Either.success(
                 listOf(
@@ -65,6 +68,10 @@ private class FakeLocationRepository: LocationRepository {
 
     override suspend fun saveLocation(location: Location) {
 
+    }
+
+    override suspend fun removeLocation(location: Location) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getCurrentLocation(): Either<Location> {

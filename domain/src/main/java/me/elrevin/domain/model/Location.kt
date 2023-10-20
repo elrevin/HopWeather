@@ -8,4 +8,5 @@ data class Location(
     val name: String = "",
     val country: String = "",
     val region: String = "",
+    val isTracked: Boolean = false,
 )

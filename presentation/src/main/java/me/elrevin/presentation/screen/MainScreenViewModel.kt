@@ -13,7 +13,9 @@ import me.elrevin.domain.model.Location
 import me.elrevin.domain.usecase.GetCurrentLocationUseCase
 import me.elrevin.domain.usecase.GetLocationsUseCase
 import me.elrevin.domain.usecase.GetWeatherUseCase
+import me.elrevin.domain.usecase.RemoveLocationUseCase
 import me.elrevin.domain.usecase.SaveLocationUseCase
+import me.elrevin.domain.usecase.SearchLocationUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +23,9 @@ class MainScreenViewModel @Inject constructor(
     private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
     private val saveLocationUseCase: SaveLocationUseCase,
     private val getLocationsUseCase: GetLocationsUseCase,
-    private val getWeatherUseCase: GetWeatherUseCase
+    private val getWeatherUseCase: GetWeatherUseCase,
+    private val searchLocationUseCase: SearchLocationUseCase,
+    private val removeLocationUseCase: RemoveLocationUseCase
 ) : ViewModel() {
     val state = MainScreenState()
 
@@ -30,11 +34,28 @@ class MainScreenViewModel @Inject constructor(
 
     init {
         obtainLocations()
+        searchLocation()
     }
 
     fun onEvent(event: MainScreenEvent) {
         when (event) {
             is MainScreenEvent.LocationAccessPermissionsGranted -> obtainCurrentLocation()
+            is MainScreenEvent.SearchTextWasChanged -> onSearchTextWasChanged(event.text)
+            is MainScreenEvent.ToggleLocation -> onToggleLocation(event.location)
+        }
+    }
+
+    private fun onToggleLocation(location: Location) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if (location.isTracked) {
+                    removeLocationUseCase(location)
+                } else {
+                    saveLocationUseCase(location)
+                }
+                state.searchText.value = ""
+                searchLocation()
+            }
         }
     }
 
@@ -57,24 +78,10 @@ class MainScreenViewModel @Inject constructor(
                 obtainWeatherJobs.clear()
 
                 // Create pages for the screen
+                state.pages.clear()
                 list.forEachIndexed { index, location ->
-
-                    // If page with this index is existing, replace it by new, for more smooth
-                    // change of interface
-                    if (state.pages.size - 1 > index) {
-                        state.pages[index] = PageState.EmptyPage(location)
-                    } else {
-                        // Pages list does not contain a page with this index
-                        // it will be added
-                        state.pages.add(index, PageState.EmptyPage(location))
-                    }
+                    state.pages.add(index, ScreenPage.LoadingPage(location, null))
                     obtainWeather(index, location)
-                }
-
-                // If list of obtained locations has fewer items then pages list (except last page for
-                // add location to tracking), we need to remove all unnecessary pages
-                if (list.size < state.pages.size - 1) {
-                    state.pages.removeRange(list.size, state.pages.size - 2)
                 }
             }
         }
@@ -102,16 +109,16 @@ class MainScreenViewModel @Inject constructor(
                 getWeatherUseCase(location).collect {
                     // put the weather data to pages list
                     state.pages[index] = when (it) {
-                        is Either.Exception -> PageState.ErrorPage(
+                        is Either.Exception -> ScreenPage.ErrorPage(
                             location,
                             Constants.Errors.unknown
                         )
-                        is Either.Failure -> PageState.ErrorPage(
+                        is Either.Failure -> ScreenPage.ErrorPage(
                             location,
                             it.getFailureMsgOrNull() ?: Constants.Errors.unknown
                         )
-                        is Either.Loading -> PageState.LoadingPage(location)
-                        is Either.Success -> PageState.WeatherPage(location, it.getValue())
+                        is Either.Loading -> ScreenPage.LoadingPage(location, it.getValueOrNull())
+                        is Either.Success -> ScreenPage.WeatherPage(location, it.getValue())
                     }
 
                 }
@@ -120,12 +127,41 @@ class MainScreenViewModel @Inject constructor(
         obtainWeatherJobs.add(job)
     }
 
+    private fun onSearchTextWasChanged(text: String) {
+        state.searchText.value = text
+        searchLocation()
+    }
+
+    var searchLocationJob: Job? = null
+
+    private fun searchLocation() {
+        if (searchLocationJob?.isActive == true) {
+            searchLocationJob?.cancel()
+        }
+
+        searchLocationJob = viewModelScope.launch{
+            searchLocationUseCase(state.searchText.value).collect{
+                when {
+                    it.isLoading() -> {
+                        state.searchLocationsInProgress.value = true
+                        val list = it.getValueOrNull() ?: listOf()
+                        state.locations.clear()
+                        state.locations.addAll(list)
+                    }
+                    it.isSuccess() -> {
+                        state.searchLocationsInProgress.value = false
+                        state.locations.clear()
+                        state.locations.addAll(it.getValue())
+                    }
+                    it.isFailure() -> {
+                        error(it.getFailureMsgOrNull() ?: Constants.Errors.unknown)
+                    }
+                }
+            }
+        }
+    }
 
     private fun error(code: String) {
         state.errorCode.value = code
-    }
-
-    private fun resetError() {
-        state.errorCode.value = ""
     }
 }

@@ -1,6 +1,5 @@
 package me.elrevin.presentation.base_ui.theme
 
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -58,13 +57,13 @@ object AppTypography {
         fontFamily = appFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
-        lineHeight = 24.sp
+        lineHeight = 16.sp
     )
 
-    val Body = TextStyle(
+    val TextField = TextStyle(
         fontFamily = appFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
         lineHeight = 16.sp
     )
 

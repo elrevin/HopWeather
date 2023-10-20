@@ -1,13 +1,13 @@
 package me.elrevin.data.local
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import me.elrevin.data.local.entity.CurrentWeatherEntity
-import me.elrevin.data.local.entity.Forecast
 import me.elrevin.data.local.entity.ForecastEntity
 import me.elrevin.data.local.entity.HourForecastEntity
 import me.elrevin.data.local.entity.LocationEntity
@@ -51,4 +51,10 @@ interface Dao {
 
     @Query("SELECT * FROM location")
     fun getLocations(): Flow<List<LocationEntity>>
+
+    @Query("SELECT * FROM location WHERE '' = :name OR name LIKE '%' || :name || '%'")
+    suspend fun getLocationsByName(name: String): List<LocationEntity>
+
+    @Delete
+    suspend fun deleteLocation(location: LocationEntity)
 }

@@ -28,6 +28,11 @@ class Dependecies {
         const val locationServeice = "com.google.android.gms:play-services-location:21.0.1"
     }
 
+    object Lottie {
+        const val lottie = "com.airbnb.android:lottie-compose:6.1.0"
+
+    }
+
     object Hilt {
         const val version = "2.47"
         private const val navigationVersion = "1.0.0"

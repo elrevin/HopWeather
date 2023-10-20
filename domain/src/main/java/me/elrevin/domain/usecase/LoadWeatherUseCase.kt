@@ -17,7 +17,7 @@ class LoadWeatherUseCase(
         val oldData = lowerOrNull(existingWeather?.currentWeather?.lastUpdatedTimestamp, referenceTimeStamp)
         if (oldData) {
             // One or several forecast days have not actual data
-            emit(Either.loading())
+            emit(Either.loading(if(existingWeather?.currentWeather != null) existingWeather else null))
             val loadedData = repository.loadWeather(location)
             if (loadedData.isSuccess()) {
                 repository.saveWeather(loadedData.getValue())

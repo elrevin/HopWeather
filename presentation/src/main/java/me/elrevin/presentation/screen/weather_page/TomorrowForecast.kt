@@ -10,7 +10,27 @@ import androidx.compose.ui.unit.dp
 import me.elrevin.domain.model.Forecast
 import me.elrevin.presentation.base_ui.theme.AppTheme
 
-internal fun LazyListScope.DayForecast(dayForecast: Forecast, nextDayForecast: Forecast) {
+internal fun LazyListScope.TomorrowForecast(dayForecast: Forecast, nextDayForecast: Forecast) {
+    item {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            SmallPanel(
+                icon = AppTheme.icons.dayTemperature(),
+                title = "Day",
+                value = "${dayForecast.maxTemp}°"
+            )
+            SmallPanel(
+                icon = AppTheme.icons.nightTemperature(),
+                title = "Night",
+                value = "${dayForecast.minTemp}°"
+            )
+        }
+    }
+
     item {
         Row(
             modifier = Modifier

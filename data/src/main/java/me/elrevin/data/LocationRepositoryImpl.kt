@@ -1,7 +1,5 @@
 package me.elrevin.data
 
-import android.annotation.SuppressLint
-import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.channels.awaitClose
@@ -22,14 +20,20 @@ class LocationRepositoryImpl(
     private val dao: Dao,
     private val remoteSource: LocationRemoteSource,
     private val fusedLocationProviderClient: FusedLocationProviderClient
-): LocationRepository {
+) : LocationRepository {
     override fun getLocations(): Flow<List<Location>> = dao.getLocations().map { list ->
         list.map { item ->
             item.toDomainModel()
         }
     }
 
-    override suspend fun searchLocation(locationName: String): Either<List<Location>> {
+    override suspend fun getLocationsByName(name: String): List<Location> =
+        dao.getLocationsByName(name)
+            .map { item ->
+                item.toDomainModel()
+            }
+
+    override suspend fun loadLocations(locationName: String): Either<List<Location>> {
         val result = remoteSource.searchLocation(locationName)
         if (result.isSuccess()) {
             return Either.success(result.getValue().map { it.toDomainModel() })
@@ -41,12 +45,16 @@ class LocationRepositoryImpl(
         dao.upsertLocation(location.toDataEntity())
     }
 
+    override suspend fun removeLocation(location: Location) {
+        dao.deleteLocation(location.toDataEntity())
+    }
+
     @RequiresPermission(
         anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"]
     )
     override suspend fun getCurrentLocation(): Either<Location> {
         // Get current location of device
-        val locationOfDevice =fusedLocationProviderClient.lastLocation
+        val locationOfDevice = fusedLocationProviderClient.lastLocation
         var result: Location? = null
         callbackFlow<android.location.Location?> {
             locationOfDevice.addOnSuccessListener { l ->
@@ -65,7 +73,7 @@ class LocationRepositoryImpl(
         }.collect {
             if (it != null) {
                 val locationQuery = "${it.latitude},${it.longitude}"
-                val res = searchLocation(locationQuery)
+                val res = loadLocations(locationQuery)
                 if (res.isSuccess() && res.getValue().isNotEmpty()) {
                     result = res.getValue()[0]
                 }

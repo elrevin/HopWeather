@@ -1,7 +1,5 @@
 package me.elrevin.presentation.base_ui.theme
 
-import androidx.compose.ui.graphics.Color
-
 fun darkAppColorScheme() = AppColorScheme(
     buttonBackground = ColorGrape,
     buttonText = ColorWhite,
@@ -11,6 +9,7 @@ fun darkAppColorScheme() = AppColorScheme(
     textFieldPlaceholder = ColorLightGray,
     textFieldValue = ColorBlack,
     screenBackground = ColorCedar,
+    screenText = ColorWhite,
     topBarBackground = ColorObsidian,
     expandedTopBarText = ColorWhite,
     collapsedTopBarText = ColorWhite,
@@ -19,5 +18,6 @@ fun darkAppColorScheme() = AppColorScheme(
     chanceBarBackground = ColorGrapeDark,
     chanceBarForeground = ColorPurple,
     iconsBackground = ColorWhite,
-    iconsForeground = ColorBlack
+    iconsForeground = ColorBlack,
+    divider = ColorLightGray,
 )

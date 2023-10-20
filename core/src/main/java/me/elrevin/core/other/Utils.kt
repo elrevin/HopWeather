@@ -1,7 +1,9 @@
 package me.elrevin.core.other
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun lowerOrNull(value: Int?, reference: Int): Boolean {
     return value == null || value < reference
@@ -35,6 +37,8 @@ fun getIsoDate(): String {
 }
 
 fun getCurrentDateTimeWithMonthName(): String {
-    val df = DateTimeFormatter.ofPattern("MMMM dd, HH:mm")
+    val df = DateTimeFormatter.ofPattern("MMMM dd, HH:mm", Locale.US)
     return df.format(LocalDateTime.now())
 }
+
+fun String.toLocalDate(): LocalDate = LocalDate.parse(this)

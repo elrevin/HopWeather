@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import me.elrevin.presentation.base_ui.theme.AppTheme
@@ -26,8 +25,7 @@ internal fun RowScope.SmallPanel(
 ) {
     Box(
         modifier = Modifier
-            .clip(AppTheme.shapes.medium)
-            .background(AppTheme.colors.panelBackground)
+            .background(AppTheme.colors.panelBackground, shape = AppTheme.shapes.medium)
             .weight(1f)
             .padding(6.dp),
         contentAlignment = Alignment.CenterStart
@@ -35,12 +33,12 @@ internal fun RowScope.SmallPanel(
         Box(
             modifier = Modifier
                 .size(28.dp)
-                .clip(RoundedCornerShape(50))
-                .background(AppTheme.colors.iconsBackground),
+                .background(AppTheme.colors.iconsBackground, shape = RoundedCornerShape(50)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 icon,
+                modifier = Modifier.size(16.dp),
                 contentDescription = "",
                 tint = AppTheme.colors.iconsForeground
             )

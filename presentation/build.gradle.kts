@@ -57,5 +57,6 @@ dependencies {
     hiltNavigation()
     lifecycle()
     compose()
+    lottie()
     test()
 }

@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,16 +46,27 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import coil.compose.AsyncImage
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.airbnb.lottie.compose.rememberLottieDynamicProperties
+import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import kotlinx.coroutines.delay
 import me.elrevin.core.other.getCurrentDateTimeWithMonthName
 import me.elrevin.domain.model.Location
 import me.elrevin.domain.model.Weather
+import me.elrevin.presentation.R
 import me.elrevin.presentation.base_ui.theme.AppTheme
 import me.elrevin.presentation.base_ui.theme.ColorBlack
+import java.time.LocalDateTime
 
 @Composable
-fun WeatherPage(location: Location, weather: Weather) {
+fun WeatherPage(location: Location, weather: Weather, loading: Boolean) {
     val state = rememberLazyListState()
 
     val maxTopBarHeight = 390f
@@ -93,7 +105,12 @@ fun WeatherPage(location: Location, weather: Weather) {
         mutableIntStateOf(0)
     }
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
         if (isTopBarCollapsed) {
             CollapsedTopBar(
                 location = location,
@@ -107,7 +124,8 @@ fun WeatherPage(location: Location, weather: Weather) {
                 activeTabIndex = activeTabIndex,
                 onActiveTabChange = {
                     activeTabIndex = it
-                }
+                },
+                loading = loading
             )
         }
         LazyColumn(
@@ -125,7 +143,8 @@ fun WeatherPage(location: Location, weather: Weather) {
                     conditionIconSize = conditionIconSize,
                     currentTempFontSize = currentTempFontSize,
                     conditionTextVisible = conditionTextVisible,
-                    dateVisible = dateVisible
+                    dateVisible = dateVisible,
+                    loading = loading
                 )
             }
             item {
@@ -136,8 +155,28 @@ fun WeatherPage(location: Location, weather: Weather) {
                     activeTabIndex = it
                 }
             }
-            when (activeTabIndex) {
-                0 -> DayForecast(dayForecast = weather.forecasts[0])
+            if (weather.forecasts.isEmpty()) {
+                item {
+                    Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                }
+            } else {
+                when (activeTabIndex) {
+                    0 -> DayForecast(
+                        dayForecast = weather.forecasts[0],
+                        nextDayForecast = weather.forecasts[1]
+                    )
+
+                    1 -> TomorrowForecast(
+                        dayForecast = weather.forecasts[1],
+                        nextDayForecast = weather.forecasts[2]
+                    )
+
+                    2 -> SevenDaysForecast(weather.forecasts)
+                }
 
             }
         }
@@ -155,7 +194,8 @@ private fun CollapsedTopBar(
     conditionIconSize: Float,
     conditionTextVisible: Boolean,
     activeTabIndex: Int,
-    onActiveTabChange: (Int) -> Unit
+    onActiveTabChange: (Int) -> Unit,
+    loading: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -164,7 +204,7 @@ private fun CollapsedTopBar(
             .background(AppTheme.colors.topBarBackground)
             .zIndex(2f)
     ) {
-        HeaderRow(textColor = topBarTextColor, location = location, alpha = imageAlpha)
+        HeaderRow(textColor = topBarTextColor, location = location, alpha = imageAlpha, loading)
         CurrentWeatherRow(
             weather = weather,
             fontSize = currentTempFontSize,
@@ -194,7 +234,8 @@ private fun ExpandedToolbar(
     conditionIconSize: Float,
     currentTempFontSize: TextUnit,
     conditionTextVisible: Boolean,
-    dateVisible: Boolean
+    dateVisible: Boolean,
+    loading: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -220,7 +261,7 @@ private fun ExpandedToolbar(
                 modifier = Modifier
                     .fillMaxSize()
                     .alpha(imageAlpha),
-                model = "https://elrevin.me/hop-weather-images/autumn-clear-day.jpg",
+                model = weather.currentWeather!!.conditionIllustration,
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.BottomCenter
@@ -228,7 +269,12 @@ private fun ExpandedToolbar(
             Column(
                 modifier = Modifier.fillMaxSize(),
             ) {
-                HeaderRow(textColor = topBarTextColor, location = location, alpha = imageAlpha)
+                HeaderRow(
+                    textColor = topBarTextColor,
+                    location = location,
+                    alpha = imageAlpha,
+                    loading = loading
+                )
                 CurrentWeatherRow(
                     weather = weather,
                     fontSize = currentTempFontSize,
@@ -252,15 +298,19 @@ private fun ExpandedToolbar(
 private fun HeaderRow(
     textColor: Color,
     location: Location,
-    alpha: Float
+    alpha: Float,
+    loading: Boolean
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 58.dp, start = 16.dp, end = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            modifier = Modifier
+                .weight(1f),
             text = "${location.name}, ${location.country}",
             style = AppTheme.typography.H1.copy(
                 shadow = Shadow(
@@ -270,8 +320,37 @@ private fun HeaderRow(
             ),
             color = textColor
         )
-    }
 
+        if (loading) {
+            val composition by rememberLottieComposition(
+                if (LocalDateTime.now().hour in (6..18))
+                    LottieCompositionSpec.RawRes(R.raw.day_loading)
+                else
+                    LottieCompositionSpec.RawRes(R.raw.night_loading)
+            )
+
+
+            val dynamicProperties = rememberLottieDynamicProperties(
+                rememberLottieDynamicProperty(
+                    property = LottieProperty.COLOR_FILTER,
+                    value = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                        textColor.hashCode(),
+                        BlendModeCompat.SRC_ATOP
+                    ),
+                    keyPath = arrayOf("**")
+                )
+            )
+
+            Text(text = "updating", style = AppTheme.typography.SmallLabel, color = textColor)
+            LottieAnimation(
+                composition = composition,
+                iterations = LottieConstants.IterateForever,
+                modifier = Modifier
+                    .size(32.dp),
+                dynamicProperties = dynamicProperties
+            )
+        }
+    }
 }
 
 @Composable
@@ -470,7 +549,8 @@ private fun RowScope.TabButton(
     active: Boolean,
     onClick: () -> Unit
 ) {
-    val containerColor = if (active) AppTheme.colors.buttonToggledBackground else AppTheme.colors.buttonBackground
+    val containerColor =
+        if (active) AppTheme.colors.buttonToggledBackground else AppTheme.colors.buttonBackground
     val contentColor = if (active) AppTheme.colors.buttonToggledText else AppTheme.colors.buttonText
     Button(
         modifier = Modifier

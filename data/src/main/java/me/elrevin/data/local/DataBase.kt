@@ -14,7 +14,7 @@ import me.elrevin.data.local.entity.LocationEntity
         ForecastEntity::class,
         HourForecastEntity::class
     ],
-    version = 5
+    version = 6
 )
 abstract class DataBase : RoomDatabase() {
     abstract fun getDao(): Dao

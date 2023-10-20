@@ -7,7 +7,6 @@ import me.elrevin.presentation.R
 
 object Icons {
     @Composable fun check() = ImageVector.vectorResource(id = R.drawable.ic_check)
-    @Composable fun calendar() = ImageVector.vectorResource(id = R.drawable.ic_calendar)
     @Composable fun pressure() = ImageVector.vectorResource(id = R.drawable.ic_pressure)
     @Composable fun rainy() = ImageVector.vectorResource(id = R.drawable.ic_rainy)
     @Composable fun wind() = ImageVector.vectorResource(id = R.drawable.ic_wind)
@@ -15,4 +14,6 @@ object Icons {
     @Composable fun sunset() = ImageVector.vectorResource(id = R.drawable.ic_sunset)
     @Composable fun uvIndex() = ImageVector.vectorResource(id = R.drawable.ic_uv_index)
     @Composable fun watch() = ImageVector.vectorResource(id = R.drawable.ic_watch)
+    @Composable fun dayTemperature() = ImageVector.vectorResource(id = R.drawable.ic_day_temperature)
+    @Composable fun nightTemperature() = ImageVector.vectorResource(id = R.drawable.ic_night_temperature)
 }

@@ -7,18 +7,23 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import me.elrevin.domain.model.Location
 import me.elrevin.domain.model.Weather
 
-data class MainScreenState (
-    val errorCode: MutableState<String> = mutableStateOf(""),
+class MainScreenState {
+    val errorCode: MutableState<String> = mutableStateOf("")
+
+    val searchText: MutableState<String> = mutableStateOf("")
+    val searchLocationsInProgress: MutableState<Boolean> = mutableStateOf(false)
+    val locations: SnapshotStateList<Location> =
+        mutableStateListOf()
 
     // Add in the pages list one page, for the Add New Tracked Location Screen
-    val pages: SnapshotStateList<PageState> =
-        mutableStateListOf(PageState.AddNewLocationPage)
-)
-
-sealed class PageState {
-    object AddNewLocationPage: PageState()
-    data class EmptyPage(val location: Location): PageState()
-    data class LoadingPage(val location: Location): PageState()
-    data class WeatherPage(val location: Location, val weather: Weather): PageState()
-    data class ErrorPage(val location: Location, val errorCode: String): PageState()
+    val pages: SnapshotStateList<ScreenPage> =
+        mutableStateListOf()
 }
+
+sealed class ScreenPage {
+    data class LoadingPage(val location: Location, val weather: Weather?): ScreenPage()
+    data class WeatherPage(val location: Location, val weather: Weather): ScreenPage()
+    data class ErrorPage(val location: Location, val errorCode: String): ScreenPage()
+}
+
+

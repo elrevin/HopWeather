@@ -11,7 +11,7 @@ sealed class Either<out T> {
     class Exception<T>(internal val e: Throwable): Either<T>()
 
     // We are waiting some data from server
-    class Loading<T> : Either<T>()
+    class Loading<T>(internal val value: T?) : Either<T>()
 
     companion object {
         fun <T>success(value: T): Either<T> = Success(value)
@@ -21,7 +21,7 @@ sealed class Either<out T> {
 
         fun <T>exception(e: Throwable): Either<T> = Exception(e)
 
-        fun <T>loading(): Either<T> = Loading()
+        fun <T>loading(value: T? = null): Either<T> = Loading(value)
 
         /**
          * Only for not successful. It can be used when failure or exception happen or loading in progress,
@@ -30,7 +30,7 @@ sealed class Either<out T> {
         fun <T>fromEither(another: Either<Any?>): Either<T> = when {
             another.isFailure() -> Failure(another.getFailureMsgOrNull()!!)
             another.isException() -> Exception(another.getThrowableOrNull()!!)
-            another.isLoading() -> Loading()
+            another.isLoading() -> Loading(null)
             else -> throw kotlin.Exception("Either.fromEither can used only for not successful")
         }
     }
@@ -40,9 +40,13 @@ sealed class Either<out T> {
     fun isException() = this is Exception
     fun isLoading() = this is Loading
 
-    fun getValueOrNull(): T? = if (isSuccess()) (this as Success).value else null
+    fun getValueOrNull(): T? = when {
+        isSuccess() -> (this as Success).value
+        isLoading() -> (this as Loading).value
+        else -> null
+    }
 
-    fun getValue(): T = (this as Success).value
+    fun getValue(): T = if (isSuccess()) (this as Success).value else throw kotlin.Exception("Either.getValue can used only for successful case")
 
     fun getFailureMsgOrNull(): String? = if (isFailure()) (this as Failure).msg else null
 
