@@ -4,9 +4,20 @@ An example Android application for viewing weather forecasts. The main goal is t
 
 ## Features
 ### Location search and weather tracking
-- Displaying today's and tomorrow's weather
-- Showing a 7-day weather forecast
-- Changing the header image (frog character) based on the season, time of day, and weather conditions
+![1](https://github.com/elrevin/HopWeather/assets/8909121/d9f545dd-f92a-4da0-89e7-d560f68630ae)
+
+### Displaying today's and tomorrow's weather
+![4](https://github.com/elrevin/HopWeather/assets/8909121/82277324-024a-4168-a862-893e0b792678)
+
+
+### Showing a 7-day weather forecast
+![2](https://github.com/elrevin/HopWeather/assets/8909121/3d81ef97-d700-43a6-830f-8bfef9a0becf)
+
+### Changing the header image (frog character) based on the season, time of day, and weather conditions
+![autumn-clear-day](https://github.com/elrevin/HopWeather/assets/8909121/44e31eee-5456-431a-b5b1-8c63442f4061)
+![autumn-clear-night](https://github.com/elrevin/HopWeather/assets/8909121/93094c75-bb6b-4472-be39-892a47b6d7a9)
+![autumn-snow-day](https://github.com/elrevin/HopWeather/assets/8909121/7c9bacf6-3dd5-4faa-ac4c-fa3b5e939f8d)
+etc.
 
 ## Project Structure
 
