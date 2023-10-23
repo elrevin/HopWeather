@@ -41,7 +41,9 @@ Flows are used for data communication between components.
 
 ## Video Demonstration
 
-[Watch a video demonstration of the app](#) (link to be inserted)
+https://github.com/elrevin/HopWeather/assets/8909121/57525a97-5fb8-435b-b028-3b3a8a949e74
+
+
 
 ## Contact
 - **Eugene Burmitsky**
