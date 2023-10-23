@@ -3,7 +3,7 @@
 An example Android application for viewing weather forecasts. The main goal is to demonstrate the principles of clean architecture in Kotlin using Jetpack Compose, Coroutines, Flows, and Retrofit.
 
 ## Features
-- Location search and weather tracking
+### Location search and weather tracking
 - Displaying today's and tomorrow's weather
 - Showing a 7-day weather forecast
 - Changing the header image (frog character) based on the season, time of day, and weather conditions
