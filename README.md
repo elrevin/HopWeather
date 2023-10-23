@@ -21,7 +21,7 @@ etc.
 ## Project Structure
 
 The application consists of the following modules:
-- [**app**](https://github.com/elrevin/HopWeather/tree/master/app): The main module containing the Application class and the main Activity.
+- **[app](https://github.com/elrevin/HopWeather/tree/master/app)**: The main module containing the Application class and the main Activity.
 - [**core**](https://github.com/elrevin/HopWeather/tree/master/core): Common resources and functions accessible to all other modules. This module does not have any other dependencies.
 - [**data**](https://github.com/elrevin/HopWeather/tree/master/data): Module for data source handling, including classes for data retrieval (external API implementation), data storage (internal SQLite/ROOM database), and data access (repositories).
 - [**domain**](https://github.com/elrevin/HopWeather/tree/master/domain): Module containing common abstractions and data structures, as well as classes implementing business logic (UseCases).
