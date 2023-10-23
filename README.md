@@ -4,7 +4,7 @@ An example Android application for viewing weather forecasts. The main goal is t
 
 ## Features
 ### Location search and weather tracking
-![1](https://github.com/elrevin/HopWeather/assets/8909121/d9f545dd-f92a-4da0-89e7-d560f68630ae)
+![1](https://github.com/elrevin/HopWeather/assets/8909121/d9f545dd-f92a-4da0-89e7-d560f68630ae | width=100)
 
 ### Displaying today's and tomorrow's weather
 ![4](https://github.com/elrevin/HopWeather/assets/8909121/82277324-024a-4168-a862-893e0b792678)
